@@ -82,6 +82,7 @@ button:hover{
 .message{
   text-align:center;
   margin-top:15px;
+  color:#ff4d4d;
 }
 
 .home{
@@ -152,8 +153,8 @@ Criar conta
 
 <script>
 
-const SCRIPT_URL =
-https://script.google.com/macros/s/AKfycbz1UOqEefNIw232u5kS3Q-S2lLkZAgrKOMLiQsvscP8OghptkaZIbzfgttmsmy7Vbuo/exec";
+// URL DO APPS SCRIPT
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby56J1KYnAaFQl6Xk5hI7_bzu2xSo_L00uKuypRNcvy26gHp8tmx6qgIAtDs8YoG49A/exec";
 
 let registerMode = false;
 
@@ -213,8 +214,11 @@ async function submitForm(){
 
       if(registerMode){
 
+        document.getElementById("message").style.color =
+          "#22c55e";
+
         document.getElementById("message").innerText =
-          "Conta criada";
+          "Conta criada com sucesso";
 
       }else{
 
@@ -229,6 +233,9 @@ async function submitForm(){
       }
 
     }else{
+
+      document.getElementById("message").style.color =
+        "#ff4d4d";
 
       document.getElementById("message").innerText =
         data.message;
