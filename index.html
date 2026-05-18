@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,10 +26,11 @@ body{
 }
 
 .container{
-  width:400px;
+  width:100%;
+  max-width:400px;
   background:#111;
   border:1px solid #222;
-  border-radius:20px;
+  border-radius:25px;
   padding:40px;
 }
 
@@ -46,7 +48,7 @@ h1{
 
 input{
   width:100%;
-  padding:14px;
+  padding:15px;
   margin-bottom:15px;
   border:none;
   border-radius:999px;
@@ -57,14 +59,13 @@ input{
 
 button{
   width:100%;
-  padding:14px;
+  padding:15px;
   border:none;
   border-radius:999px;
   background:white;
   color:black;
   font-weight:bold;
   cursor:pointer;
-  margin-top:10px;
 }
 
 button:hover{
@@ -72,15 +73,15 @@ button:hover{
 }
 
 .switch{
-  text-align:center;
   margin-top:20px;
+  text-align:center;
   color:#888;
   cursor:pointer;
 }
 
 .message{
-  margin-top:15px;
   text-align:center;
+  margin-top:15px;
 }
 
 .home{
@@ -89,6 +90,7 @@ button:hover{
 }
 
 </style>
+
 </head>
 
 <body>
@@ -101,17 +103,34 @@ button:hover{
 
 <h1 id="title">Entrar no X</h1>
 
-<input type="text" id="username" placeholder="Username" style="display:none">
+<input
+  type="text"
+  id="username"
+  placeholder="Username"
+  style="display:none"
+>
 
-<input type="email" id="email" placeholder="Email">
+<input
+  type="email"
+  id="email"
+  placeholder="Email"
+>
 
-<input type="password" id="password" placeholder="Senha">
+<input
+  type="password"
+  id="password"
+  placeholder="Senha"
+>
 
 <button onclick="submitForm()" id="btn">
 Entrar
 </button>
 
-<div class="switch" onclick="toggleMode()" id="switchText">
+<div
+  class="switch"
+  onclick="toggleMode()"
+  id="switchText"
+>
 Criar conta
 </div>
 
@@ -125,7 +144,7 @@ Criar conta
 
 <h1 id="welcome"></h1>
 
-<p>Login realizado com sucesso.</p>
+<p>Login realizado.</p>
 
 </div>
 
@@ -133,7 +152,8 @@ Criar conta
 
 <script>
 
-const SCRIPT_URL = "COLE_AQUI_URL_DO_APPS_SCRIPT";
+const SCRIPT_URL =
+https://script.google.com/macros/s/AKfycbz1UOqEefNIw232u5kS3Q-S2lLkZAgrKOMLiQsvscP8OghptkaZIbzfgttmsmy7Vbuo/exec";
 
 let registerMode = false;
 
@@ -158,40 +178,43 @@ function toggleMode(){
 
 async function submitForm(){
 
-  const username =
-    document.getElementById("username").value;
-
-  const email =
-    document.getElementById("email").value;
-
-  const password =
-    document.getElementById("password").value;
-
   const payload = {
-    action: registerMode ? "register" : "login",
-    username,
-    email,
-    password
+
+    action: registerMode
+      ? "register"
+      : "login",
+
+    username:
+      document.getElementById("username").value,
+
+    email:
+      document.getElementById("email").value,
+
+    password:
+      document.getElementById("password").value
   };
 
   try{
 
-    const response = await fetch(SCRIPT_URL,{
+    const req = await fetch(SCRIPT_URL,{
+
       method:"POST",
+
       headers:{
         "Content-Type":"text/plain"
       },
+
       body:JSON.stringify(payload)
     });
 
-    const data = await response.json();
+    const data = await req.json();
 
     if(data.success){
 
       if(registerMode){
 
         document.getElementById("message").innerText =
-          "Conta criada com sucesso";
+          "Conta criada";
 
       }else{
 
@@ -213,10 +236,10 @@ async function submitForm(){
 
   }catch(err){
 
-    document.getElementById("message").innerText =
-      "Erro na conexão";
-
     console.error(err);
+
+    document.getElementById("message").innerText =
+      "Erro de conexão";
   }
 }
 
