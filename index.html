@@ -68,6 +68,10 @@ button{
   cursor:pointer;
 }
 
+button:hover{
+  opacity:0.9;
+}
+
 .switch{
   margin-top:20px;
   text-align:center;
@@ -78,7 +82,6 @@ button{
 .message{
   text-align:center;
   margin-top:15px;
-  color:#ff4d4d;
 }
 
 .home{
@@ -149,7 +152,8 @@ Criar conta
 
 <script>
 
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwjSvwYld9tWUiHBWI5AzM0DD6iUNlIOMzRsatizXejwuFifE8FV_-S_8eOD8USmcZS/exec";
+const SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbyiLPdMXMy8KPwpJy7qXtkiEg0X4ZPYD2gkmVcvmep1PqiI71E_DEQZkd7Ffel_KzCc/exec";
 
 let registerMode = false;
 
@@ -172,81 +176,74 @@ function toggleMode(){
   document.getElementById("message").innerText = "";
 }
 
-function submitForm(){
+async function submitForm(){
 
-  const username =
-    document.getElementById("username").value;
+  const payload = {
 
-  const email =
-    document.getElementById("email").value;
+    action: registerMode
+      ? "register"
+      : "login",
 
-  const password =
-    document.getElementById("password").value;
+    username:
+      document.getElementById("username").value,
 
-  const action =
-    registerMode ? "register" : "login";
+    email:
+      document.getElementById("email").value,
 
-  const form = document.createElement("form");
-
-  form.method = "POST";
-  form.action = SCRIPT_URL;
-  form.target = "hiddenFrame";
-
-  form.style.display = "none";
-
-  const campos = {
-    action,
-    username,
-    email,
-    password
+    password:
+      document.getElementById("password").value
   };
 
-  for(const chave in campos){
+  try{
 
-    const input = document.createElement("input");
+    const req = await fetch(SCRIPT_URL,{
 
-    input.type = "hidden";
-    input.name = chave;
-    input.value = campos[chave];
+      method:"POST",
 
-    form.appendChild(input);
-  }
+      headers:{
+        "Content-Type":"text/plain"
+      },
 
-  document.body.appendChild(form);
+      body:JSON.stringify(payload)
+    });
 
-  form.submit();
+    const data = await req.json();
 
-  document.getElementById("message").style.color =
-    "#22c55e";
+    if(data.success){
 
-  document.getElementById("message").innerText =
-    registerMode
-      ? "Conta enviada com sucesso"
-      : "Login enviado";
+      if(registerMode){
 
-  setTimeout(()=>{
+        document.getElementById("message").innerText =
+          "Conta criada";
 
-    if(!registerMode){
+      }else{
 
-      document.getElementById("auth").style.display =
-        "none";
+        document.getElementById("auth").style.display =
+          "none";
 
-      document.getElementById("home").style.display =
-        "block";
+        document.getElementById("home").style.display =
+          "block";
 
-      document.getElementById("welcome").innerText =
-        "@" + email.split("@")[0];
+        document.getElementById("welcome").innerText =
+          "@" + data.username;
+      }
+
+    }else{
+
+      document.getElementById("message").innerText =
+        data.message;
     }
 
-  },1000);
+  }catch(err){
+
+    console.error(err);
+
+    document.getElementById("message").innerText =
+      "Erro de conexão";
+  }
 }
 
 </script>
-
-<iframe
-  name="hiddenFrame"
-  style="display:none"
-></iframe>
 
 </body>
 </html>
